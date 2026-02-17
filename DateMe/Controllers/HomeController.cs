@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using DateMe.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +53,7 @@ namespace DateMe.Controllers
         public IActionResult Edit(int recordID)
         {
             var recordToEdit = _context.Applications
-                .Where(x => x.ApplicationID == 1);
+                .Where(x => x.ApplicationID == recordID);
 
             ViewBag.Majors = _context.Majors
                 .OrderBy(x => x.MajorName)
