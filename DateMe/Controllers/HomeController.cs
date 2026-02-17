@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using DateMe.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DateMe.Controllers
 {
@@ -20,9 +21,9 @@ namespace DateMe.Controllers
         [HttpGet]
         public IActionResult DatingApplication()
         {
-            ViewBag.Major = _context.Majors
+            ViewBag.Majors = _context.Majors
                 .OrderBy(x => x.MajorName)
-                .ToList(); 
+                .ToList();
 
             return View("DatingApplication");
         }
@@ -37,13 +38,27 @@ namespace DateMe.Controllers
         }
 
         public IActionResult Waitlist()
-        { 
+        {
             // Linq
             var applications = _context.Applications
+                .Include(x => x.Major)
                 .Where(x => x.CreeperStalker == false)
-                .OrderBy(x=> x.LastName).ToList();
+                .OrderBy(x => x.LastName)
+                .ToList();
 
             return View(applications);
+        }
+
+        public IActionResult Edit(int recordID)
+        {
+            var recordToEdit = _context.Applications
+                .Where(x => x.ApplicationID == 1);
+
+            ViewBag.Majors = _context.Majors
+                .OrderBy(x => x.MajorName)
+                .ToList();
+
+            return View("DatingApplication");
         }
     }
 }
